@@ -1,23 +1,21 @@
-= Setting up
+= ハンズオン環境の確認
 :experimental:
 
-== First Step: Confirm Your Username!
+== ユーザー名の確認
 
-Look in the box at the top of your screen. Is your username set already? If so it will look like this:
+画面上部のボックスに、ユーザー名が設定されているか確認してください。設定されている場合は、次のように表示されます。
 
 image::alreadyset.png[Set User ID above, 700]
 
-If your username is properly set, then you can move on. **If not, in the above box, enter the user ID you were assigned** like this:
+ユーザー名が正しく設定されている場合には次へ進んでください。 ** ユーザー名が設定されていない場合は、上記のボックスに割り当てられたユーザーIDを次のように入力してください。 **
 
 image::setuser.png[Set User ID above, 700]
 
-This will customize the links and copy/paste code for this workshop. If you accidentally type the wrong username, just click the green recycle icon to reset it.
+これにより、このワークショップの開発環境や OpenShift のコンソールのリンクがカスタマイズされます。誤って間違ったユーザー名を入力した場合は、緑のリサイクルアイコンをクリックしてリセットしてください。
 
-Throughout this lab you'll discover how Quarkus can make your development of cloud native apps faster and more productive.
+== コピー＆ペーストの確認
 
-== Click-to-Copy
-
-You will see various code and command blocks throughout these exercises which can be copy/pasted directly by clicking anywhere on the block of text:
+このワークショップでは、コードやコマンドが表示されます。それらのテキストブロックのどこかをクリックするだけで、コピー＆ペーストすることができます。
 
 [source,java,role="copypaste"]
 ----
@@ -29,27 +27,25 @@ public class CopyMeDirectly {
 }
 ----
 
-Simply click once and the whole block is copied to your clipboard, ready to be pasted with kbd:[CTRL+V] (or kbd:[Command+V] on Mac OS).
+上記をクリックするとブロック全体がクリップボードにコピーされ、 Windowsなら [CTRL+V] 、Macなら[Command+V] でペーストできます。
 
-There are also Linux shell commands that can also be copied and pasted into a Terminal in your Development Environment:
+また、Linuxのシェルコマンドもあり、これも開発環境のターミナルにコピー＆ペーストすることができます。
 
 [source,sh,role="copypaste"]
 ----
 echo "This is a bash shell command that you can copy/paste by clicking"
 ----
 
-== The Workshop Environment You Are Using
+== ワークショップ環境の構成
 
-Your workshop environment consists of several components which have been pre-installed and are ready to use. Depending on which parts of the workshop you’re doing, you will use one or more of:
+本ワークショップでは、すぐに利用できるように事前にインストールされた、様々なコンポーネントを利用することができます。ワークショップ環境は以下のコンポーネントによって構成されています。
 
-* https://www.openshift.com/[Red Hat OpenShift,window=_blank] - You’ll use one or more *projects* (Kubernetes namespaces) that are your own and are isolated from other workshop students
-* https://developers.redhat.com/products/codeready-workspaces/overview[Red Hat CodeReady Workspaces,window=_blank] - based on *Eclipse Che*, it’s a cloud-based, in-browser IDE (similar to IntelliJ IDEA, VSCode, Eclipse IDE). You’ve been provisioned your own personal workspace for use with this workshop. You’ll write, test, and deploy code from here.
-* https://www.redhat.com/en/products/runtimes[Red Hat Runtimes, window=_blank] - a collection of cloud-native runtimes and platform that enables Spring Boot, Node.js, and https://quarkus.io[Quarkus, window=_blank] developers to create Cloud-native apps with ease.
+* https://www.openshift.com/[Red Hat OpenShift,window=_blank] - 他のワークショップ参加者と独立した OpenShift プロジェクト (Kubernetes Namespaces) を利用します。
+* https://developers.redhat.com/products/codeready-workspaces/overview[Red Hat CodeReady Workspaces,window=_blank] - Eclipse Che ベースの Visual Studio ライクな Web ブラウザ経由で利用できる IDE 環境です。本ワークショップの開発環境です。
+* https://www.redhat.com/en/products/runtimes[Red Hat Runtimes, window=_blank] - Spring Boot・Node.js・Quarkus などを含んでおりクラウドネイティブな実行環境を提供します。本ワークショップにて利用する Red Hat Data Grid も含んでいます。
 
-You’ll be provided clickable URLs throughout the workshop to access the services that have been installed for you.
+本ワークショップでは、事前インストールされたコンポーネントへアクセスするため、クリック可能な URL が提供されます。
 
-== How to complete this workshop
+== ワークショップの進め方
 
-Click the "Next >" button at the bottom to advance to the next topic. You can also use the menu on the left to move around the instructions at will.
-
-Good luck, and let’s get started!
+下部にある「Next >」ボタンをクリックして次のトピックへ進むことができます。また、左側のメニューを使用して、他のセクションへ自由に移動することもできます。
