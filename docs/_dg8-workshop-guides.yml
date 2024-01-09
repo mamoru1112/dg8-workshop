@@ -26,4 +26,3 @@ modules:
   - remotecache
   - monitoring
   - crosssite
-  - conclusion

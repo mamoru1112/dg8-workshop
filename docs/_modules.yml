@@ -3,18 +3,16 @@ config:
 
 modules:
   settingup:
-    name: Setting up
+    name: ハンズオン環境の確認
   dgin10mins:
-    name: DataGrid in 10 mins
+    name: Red Hat Data Grid とは
   exercises:
-    name: Getting started with Data Grid
+    name: 基本機能
   installation:
-    name: Kubernetes native Cache service
+    name: Red Hat Data Grid インストール
   remotecache:
-    name: Quarkus Remote Cache app
+    name: リモートキャッシュ
   monitoring:
-    name: Monitoring and metrics  
+    name: モニタリングとメトリクス
   crosssite:
-    name: Kubernetes native Cross site clusters     
-  conclusion:
-    name: You made it!
+    name: (オプション) クロスサイトレプリケーション  
