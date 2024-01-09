@@ -1,5 +1,5 @@
 id: "dg8-workshop"
-name: "Red Hat Data Grid - From zero to hero"
+name: "Red Hat Data Grid 8 ハンズオン"
 
 content:
   url: https://raw.githubusercontent.com/sshaaf/dg8-workshop.git/development
@@ -19,7 +19,6 @@ vars:
 
 modules:
   activate:
-  - about
   - settingup
   - dgin10mins
   - exercises
@@ -27,8 +26,4 @@ modules:
   - remotecache
   - monitoring
   - crosssite
-  - createcache
-  - sessionexternalization
   - conclusion
-  - appendix
-  - references
