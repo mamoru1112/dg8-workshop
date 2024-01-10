@@ -1,89 +1,112 @@
-= DatGrid 8 in 10 minutes
+= Red Hat Data Grid とは
 :experimental:
 
-The latest update to Red Hat Runtimes is with the release of Red Hat Data Grid 8, which provides a distributed in-memory, NoSQL datastore solution. Your applications can access, process, and analyze data at in-memory speed to deliver a superior user experience. Whether using legacy applications or a new breed of microservices and functions, Red Hat Data Grid 8 will enable the journey to Open Hybrid Cloud. Data Grid includes the Infinispan open-source software project. It is available to deploy as an embedded library, a standalone server, or a containerized application on the Red Hat OpenShift Container Platform.
+Red Hat Data Grid とは、分散型インメモリ、NoSQL データストア・ソリューションです。
+アプリケーションは、インメモリ速度でデータにアクセス・処理・分析することができるようになります。
+レガシーアプリケーションを使用する場合でも、新しいマイクロサービスや機能を使用する場合でも、Red Hat Data Grid 8 はオープン・ハイブリッド・クラウドへの移行を可能にします。
+Red Hat Data Grid には Infinispan オープンソース・ソフトウェア・プロジェクトが含まれています。
+組み込みライブラリ、スタンドアロンサーバー、または Red Hat OpenShift Container Platform 上のコンテナアプリケーションとしてデプロイできます。
 
 image::dg8.png[Red Hat Data Grid 8.2, 700]
 
+=== Operator による完全なライフサイクル管理
+Operator は、Kubernetes API を使用して、アプリケーションの運用とライフサイクル管理を自動化します。
+これは、複雑なアプリケーション（例えば、分散キャッシュ、データベースなど）が、新しいバージョンが到着した場合などに人手を介さずに簡単にアップグレードできることを意味します。
+Operator SDK により、開発者はそのような Operator を書くことができます。
+Red Hat Data Grid は、運用インテリジェンスを提供する完全にサポートされた Data Grid Operator を用いてインストールされます。
 
-=== A Full Lifecycle Operator to reduce deployment and management overhead in OpenShift
-An Operator enables operations and lifecycle management for an application using the underlying Kubernetes API. That means complex applications (e.g. consumed as services such as distributed caching, databases, etc.) can easily get upgraded when newer versions arrive and more; also meaning no human intervention. The Operator SDK enables developers to write such Operators. Red Hat Data Grid 8 introduces a fully supported Data Grid Operator that provides operational intelligence.
+=== 新しいサーバーアーキテクチャ
+クラウドとコンテナネイティブの Data Grid はフットプリントを削減する必要があり、Red Hat Data Grid の最新バージョンにおいて実現されています。
+ディスクフットプリントと初期ヒープサイズの両方を最大 50% 削減し、キャッシュデータを格納するために多くのメモリを残します。
+Red Hat JBoss Enterprise Application Platform (EAP) なしでサーバーを実行できるようになったため、メモリとディスクのフットプリントが小さくなり、構成もシンプルになりました。
 
-=== A new server architecture 
-Cloud and Container Native Data Grid needs a reduced footprint, and that's what the latest version of Red Hat Data Grid brings. It reduces both the disk footprint and initial heap size up to 50%, leaving more memory for your data. You can now run the server without the Red Hat JBoss Enterprise Application Platform (EAP), ensuring a lower memory and disk footprint also simplifying configuration. 
+さらに、Red Hat Data Grid 8 サーバーは、Red Hat SSO との統合や攻撃対象領域の縮小など、セキュリティに関するいくつかの機能強化や改善を提供しています。
 
-Moreover, Data Grid 8 servers provide several enhancements and improvements to security, including integration with Red Hat SSO and a smaller attack surface.
+=== 高性能で豊富な REST API
+Red Hat Data Grid 8 は REST API v2 を導入しています。
+この API は v1 と比較してレスポンス速度が 50% 高速化されています。 また、以下のような新しい機能も導入されています。：
 
-=== A more performant and rich REST API 
-Red Hat Data Grid 8 introduces REST API v2. 
-The API has 50% faster response rates compared to v1. There are also new capabilities introduced, such as:
+* データへのアクセスとオブジェクト（カウンターなど）の操作
+* Data Grid クラスタを安全にシャットダウンしたり、クロスサイトレプリケーションを使用している時にキャッシュの状態をバックアップ・ロケーションに転送したりするような操作の実行
+* クラスタとサーバの健全性を監視し、統計情報の取得
 
-* Access data and manipulate objects (such as counters)
-* Perform operations such as gracefully shutting down Data Grid clusters or transferring cache state to backup locations when using cross-site replication
-* And lastly, monitor cluster and server health and retrieve statistics
+さらに、Red Hat Data Grid REST API v2 は、相互運用性を高めるために、JSON・XML・Protobuf・プレーンテキストなどのストレージフォーマット間を自動的に変換します。
+Red Hat Data Grid エンジニアリングチームは、包括的な REST API ドキュメントを開発・維持しています。
 
-Moreover, Red Hat Data Grid REST API v2 automatically converts between storage formats such as JSON, XML, Protobuf, and plain text for increased interoperability. The Red Hat Data Grid engineering team develops and maintains comprehensive REST API Documentation.
+=== パワフルな CLI
+Red Hat Data Grid では、データへのリモートアクセスとクラスタ管理のための CLI が提供されています。
+CLIでは `cd` や `ls` といった使い慣れた Bash コマンドを使うことができます。また、コマンドの履歴や自動補完機能も提供されています。
 
-=== A powerful CLI 
-In 8, Data Grid gives you a new CLI with intuitive commands for remotely accessing data and managing clusters.
-The CLI uses familiar Bash commands for navigating, such as `cd` and `ls`. It also provides command history and auto-completion for ease of use. 
+さらに、CLI ではコマンドのヘルプテキストやマニュアルページをわかりやすい例とともに提供しています。
 
-Additionally, the CLI provides help text and man pages for commands with clear examples.
+=== 可観測性(オブザーバビリティ)の強化
+Prometheus との統合により `/metrics` エンドポイントを利用できます。
+さらに、Red Hat Data Grid 8 は Eclipse Microprofile Metrics API と互換性があります。
+また、より具体的なメトリクスやゲージも含まれています。
+また、Data Grid 8 は JMX 経由での統計・管理操作の改善や、粗い粒度のロギング・カテゴリーと JSON フォーマットのログのサポートの更新も提供しています。
 
-=== Enhanced observability 
-Now you can use the `/metrics` endpoint for integration with Prometheus. Moreover, Red Hat Data Grid 8 is compatible with Eclipse Microprofile Metrics API. It also includes more specific metrics and gauges. Data Grid 8 also offers improved statistics and management operations via JMX and updates to logging with coarse-grained logging categories and support for logs in JSON format.
+== キャッシングとは何か、Red Hat Data Grid ではどのように適用するのか？
+モダンアプリケーションでは、データベース・ファイル・Web サービス・RPC 呼び出しなどから取得されたデータが大量に利用されています。
+アプリケーションにてこれらのデータを処理する場合、最も自然な方法は何でしょうか? ほとんどの場合、アプリケーションはこのデータをメモリ内で処理することでしょう。
+ネットワーク遅延や大量のデータを返す大きなクエリなど、何らかの理由でデータベースが非常に遅い場合を仮定しましょう。
+これを処理する最も簡単な方法は、そのデータの一部をメモリに保存することです。そうすることで、システムへのリクエストをより速く処理できるようになります。ただし、課題もあります。
+どれくらいの量のデータをメモリに保存する必要がありますか?そして最も重要なのは、障害が発生した場合に何が起こるかということです。
 
-== What is Caching and how to apply it with Red Hat Data Grid?
-Modern applications use data, let's assume lots of data, whether it comes from databases, files, web services, rpc call etc. 
-When an application has to process it, what is the most natural way of doing it? Mostly, the application will process this data in memory. 
-Let's assume I have a very slow database for any reason: Network latency or big queries that return a lot of data. 
-The most straightforward way of handling this would be to store some of that data in memory. By doing so, you would be able to process requests to your systems much faster. However, there are challenges. How much data should you store in memory? And most importantly, what will happen in case of failure scenarios? 
+* メモリ上のデータの状態をすべて失いますか？
+* 障害が発生した際と同じ状態に戻るために、すべてのデータやイベントを読み直す必要があるのでしょうか？さもないと、それを完全にメモリ上のデータを失うかもしれません。
 
-* Will you lose all the state of your data in memory? 
-* Will you need to re-read all your data and events to get back to the same state where you failed? Or you might have to let go of that entirely. 
+上記の2つはとてもシンプルに見えるかもしれませんが、これらの作業は退屈で、最も重要なのはミスを犯しやすいということです。
+この時点で、ほとんどの人が過去に使ったことがあるかもしれない、ローカルキャッシュ（例えば`HashMap`）を導入することを考えるでしょう。
+しかし、開発者であれば、障害が発生した際ににあまり効果がないことを知っているかもしれません。
+だからこそ、メモリにデータをキャッシュするだけでなく、以下のような機能を持つコンポーネントが必要です。：
 
-The above two might seem very simple, but those tasks can be tedious and, most importantly, error prone. 
-At this point, we could introduce a local cache (e.g. a `HashMap`) that most of us might have use in the past. However, as a developer, you might know that this doesn't have much effect in case of failures. 
-So you need a component that can not just cache data in the memory but also give:
-
-1. A consistent way to handle data and state in the memory.
-2. Resiliency in case of failures.
-3. Processing efficiency and performance.
-4. Events, streams, and distribution capabilities.
-
+1. メモリ上のデータと状態の一貫性
+2. 障害発生時の回復力
+3. 処理効率とパフォーマンス
+4. イベント、ストリーム、配信機能
 
 image::caching.png[Caching, 700]
 
 
-With such capabilities, the cache is no longer just an in-memory data structure. Therefore, as a developer, you can take this component out of your local in-memory processing and distribute it over the network. In case of application failures, you will still be able to access this data from the last point you left off. 
+このような機能により、キャッシュはもはや単なるインメモリ・データ構造ではなくなります。
+つまり、開発者としては、このコンポーネントをローカルのインメモリ処理から取り出して、ネットワーク上に分散させることができます。
+アプリケーションに障害が発生した場合でも、このデータにアクセスすることができます。
 
-Now getting back to our primary question, how much data should you store in memory? Partially we have already discussed this above. It is important that, as a developer, you should be able to specify TTL (Time To Live) for your cache and its entries. 
+最初の質問に戻ると、メモリにどれだけのデータを保存すべきでしょうか？開発者として重要なのは、キャッシュとそのエントリーに TTL（Time To Live）を指定できるようにすることです。
 
-You should also be able to define eviction and expiration. Eviction is used to prevent memory overuse and not to remove the entry from the cache, as it will drop an entry from memory on this instance, but it does not affect other instances or the persistence. It must be used with a configured persistence to be consistent. Whereas expiration will retire the entry and remove it from the cache and its persistence completely. Thereby knowing when your cache is hot and what data resides in it. Moreover you should be able to do this distributed, cluster-wide, or remotely. 
+Eviction と Expiration も定義できるようにする必要があります。
+Eviction は、インスタンスのメモリからエントリを削除することによりメモリの過剰使用を防止しますが、キャッシュからエントリを削除しないため他のインスタンスの永続性には影響しません。一貫性を保つために、構成された永続性を使用する必要があります。
+一方、Expiration ではエントリは廃止され、キャッシュとその永続性から完全に削除されます。
+これにより、キャッシュがいつ使われているか、キャッシュ内にどのようなデータが存在するかを知ることができます。
+さらに、これを分散環境・クラスタ全体・またはリモートで実行できる必要があります。
 
-Once a cache is remote, we also want some of the distributed features, like monitoring for example. Lets take a look at some of the caching strategies.
+キャッシュがリモートにある場合、例えばモニタリングのような分散機能も欲しくなります。キャッシュ戦略のいくつかを見てみましょう。
 
-==== Local cache
-The primary use for Red Hat Data Grid is to provide a fast in-memory cache of frequently accessed data. Suppose you have a slow data source (database, web service, text file, etc.) - you could load some or all of that data in memory so that it’s just a memory access away from your code. Using Red Hat Data Grid is better than using a simple `ConcurrentHashMap`. By setting up an embedded cache, Red Hat Dat Grid also allows you to tap into more features e.g. expiration, eviction, events on the cache etc. All make out a much better way of handling your cache and component design. Moreover, if you want to cluster such a cache that is also easily possible. 
+==== ローカルキャッシュ
+Red Hat Data Grid の主な用途は、頻繁にアクセスされるデータの高速なインメモリキャッシュを提供することです。
+低速なデータソース (データベース、Web サービス、テキストファイルなど) があるとします。Red Hat Data Grid を使うことは、単純な `ConcurrentHashMap` を使うよりも優れています。
+組み込みキャッシュを設定することで、Red Hat Dat Grid はより多くの機能を利用できるようになります。これらによって、キャッシュとコンポーネントの設計をより良く扱うことができます。さらに、このようなキャッシュをクラスタ化したい場合、それも簡単に可能です。
 
-==== As a clustered cache
-Let's assume you started with a local/embedded cache in your application, but now you suddenly realize that one instance of your application is not enough to handle the load from your users or systems. What do you do? With Red Hat Data Grid you can now scale that cache into a cluster. 
+==== クラスタ化されたキャッシュ
+アプリケーションにおいてローカルまたは組み込みキャッシュを利用し始めましたが、アプリケーションの1つのインスタンスではユーザーやシステムからの負荷を処理しきれないことに気づいた場合、どのように対応しますか？
+Red Hat Data Grid を使えば、キャッシュをクラスタに拡張することができます。
 
-You don't need to change how you use your cache. Adding a few additional parameters, you can now have a clustered cache having multiple instances of your application listening to the same coherent cache. 
+キャッシュの使い方を変える必要はありません。いくつかのパラメータを追加するだけで、複数のアプリケーションにて利用できるクラスタ化されたキャッシュを持つことができます。
 
-Events will be fired across the cluster, expiration will happen across the cluster, etc. Eviction removes entries from the local instance memory if not used, but not from persistent cache stores or other cluster members to ensure that the local Data Grid does not exceed that maximum size. Moreover, you now even have the possibility to distribute your keys across the cluster. Red Hat Data Grid can scale horizontally to hundreds of nodes. 
+イベントはクラスタ全体で発生し、Expiration はクラスタ全体で発生します。Eviction はローカルメモリからエントリを削除しますが、永続キャッシュストアや他のクラスタメンバーからは削除しません。
+さらに、クラスター全体でキーを分散させることもできます。Red Hat Data Grid は水平方向に数百ノードまで拡張できます。
 
-==== As a remote cache
-Let's just say you used the clustered cache, and embedded it in your application, so every time a new instance of your application is started you would have a new instance of your embedded cache ready to become part of the cluster. 
+==== リモートキャッシュ
+クラスタ化されたキャッシュを使い、それをアプリケーションに組み込んだとしましょう。そうすれば、アプリケーションの新しいインスタンスが起動するたびに、組み込みキャッシュの新しいインスタンスがクラスタの一部になることができます。
 
-This sounds great! Although, what if you don't want that clustering in your application? Then, you might want to use a component from outside your application's lifecycle. Or you want to share this cache across multiple applications. In that case, the Red Hat Data Grid could act as a remote data grid. 
+これは素晴らしいことです。しかし、アプリケーションにクラスタリングを使いたくないとしたらどうでしょうか？アプリケーションのライフサイクル外のコンポーネントを使いたいかもしれません。
+あるいは、このキャッシュを複数のアプリケーションで共有したいかもしれません。その場合、Red Hat Data Grid はリモートデータグリッドとして機能します。
 
-Now you can access your cache via multiple programming runtimes (e.g. Vert.x, Quarkus, NodeJS, C#, C/C++, etc.), and your cache lifecycle and memory consumption will be independent of the application's life cycle. Great advantage!
+複数のプログラミングランタイム（Vert.x、Quarkus、NodeJS、C#、C/C++など）からキャッシュにアクセスできるようになり、キャッシュのライフサイクルとメモリ消費量はアプリケーションのライフサイクルから独立することができます。
 
-Congratulations! By now, you understand the different patterns of caching and the requirements. Let's go ahead and create our first application and learn how to use Red Hat Data Grid to achieve caching. Press next! 
-
+ここまでで、キャッシュの様々なパターンと要件を理解することができました。早速最初のアプリケーションを作成し、Red Hat Data Grid を使ってキャッシュを実現する方法を学びましょう。次へ進んでください。
  
-=== Additional Resources:
+=== 参考資料:
 - Traditional zip deployments are available on the link:https://access.redhat.com[Customer Portal, window=_blank] link:https://access.redhat.com/jbossnetwork/restricted/listSoftware.html?downloadType=distributions&product=data.grid[Red Hat Data Grid download page, window=_blank].
 - The container distribution and operator are available in the link:https://catalog.redhat.com/software/containers/explore[Red Hat Container Catalog, window=_blank]
 - Product documentation is available link:https://docs.redhat.com[here, window=_blank]
