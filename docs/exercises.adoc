@@ -56,37 +56,42 @@ image::codeready-view.png[codeready-view, 700, align="center"]
 
 
 
-== Exercises
+== 演習問題
 
-This first lab comprises 5 Exercises. These exercises will give you a glimpse into some of the features of Red Hat Data Grid and is a good starting point to learn how to use Data Grid with your applications. This is a summary of the Exercises:
+この最初のラボは5つの演習から構成されています。これらの演習では、Red Hat Data Grid の機能の一部を垣間見ることができ、アプリケーションで Data Grid を使用する方法を学ぶための良い出発点となります。以下は演習の概要です:
 
-1. *Exercise 1* - Creating a Cache
+1. *Exercise 1* - キャッシュの作成
 2. *Exercise 2* - JSR-107, JCache
-3. *Exercise 3* - Functional API
-4. *Exercise 4* - Streaming data from the Cache
-5. *Exercise 5* - Using Transactions
+3. *Exercise 3* - Functional API        (本ワークショップでは実施しない)
+4. *Exercise 4* - Streaming data from the Cache         (本ワークショップでは実施しない)
+5. *Exercise 5* - トランザクション管理
 
-Each Exercise has a corresponding `.java` file e.g. `Exercise1.java`. The maven project required for this lab is `dg8-exercises`. The following screenshot shows where the Java files are placed. The package name is `org.acme`.
+各演習問題には対応する `.java` ファイル（例：`Exercise1.java`）があります。このラボにおいて必要な maven プロジェクトは `dg8-exercises` です。
+次のスクリーンショットは Java ファイルが配置されている場所を示しています。パッケージ名は `org.acme` である。
 
 image::codeready-view-exercises.png[codeready-view-exercises, 700, align="center"]
 
 
-All exercises are marked with a `//TODO:`. Wherever you see this `//TODO:` it means that you need to write some code below it. We have added some comments, so you know what is required. In case the instructions are not understandable, please ask the instructor.
+すべての演習問題には `//TODO:` がついています。この `//TODO:` は、その下にコードを書く必要があることを意味しています。何が必要なのかがわかるようにコメントをつけました。指示が理解できない場合は講師に質問してください。
 
-Moreover, you will find that the preceding exercise sections will explain the `//TODO` in more detail and what needs to be done.
+さらに、先の演習セクションで `//TODO` についてより詳しく、何をすべきかを説明していることがわかるでしょう。
 
+=== Exercise 1: ローカルキャッシュの作成
 
-=== Exercise 1: Creating a local Cache
+初めに、Java の _Maps_ がなぜキャッシュに適しているか考えましょう。
+Maps は高速であり、`hashCode` や `equals` といったメソッドを使って、Maps にデータを追加する方法を決定します。
+これは、データを読み書きするのに十分な速度（O(1)）が出せるということであり、パフォーマンスにとって例外的なことでありキャッシュに期待されることでもあります。
+データの保存はキーとバリューのペアで行われます。``Map`` には他にもいろいろあるが、まずは基本的なキャッシュのハウツーから始めましょう。
 
-First, a bit about Java _Maps_. Why are Maps good for a cache? Maps are fast, they use methods like `hashCode` and `equals` to determine how to add data to the map. This also means they can be fast enough (O(1)) to read and write data. That is exceptional for performance, and that's what one would expect from a cache. Data storage is in key and value pairs. There is a lot more to ``Map``s, but let's start with a basic cache how-to.
+*CacheManager*  は、Cache インスタンスを取得するための主なメカニズムであり、キャッシュを使用するための出発点として利用されます。
 
-A *CacheManager* is the primary mechanism for retrieving a Cache instance and is often used as a starting point to use the cache.
+基本的に、`Map` オブジェクトを使用する場合、`Map` を作成しすべてのキーとバリューのペアを格納します。
+しかし、Red Hat Data Grid / Infinispan のようなツールを使用する場合、単純なマップ以上のもの（リスナーやイベントなど）を利用することができます。
 
-Essentially, if you were using a `Map` object you would just create a `Map` and store all your key|value pairs in it. However, when you use a tool like Red Hat Data Grid / Infinispan, you get more than just a simple map (e.g. Listeners, events, etc), all of which we will talk about in further sections.
+注意: CacheManager は重いオブジェクトであり JVM ごとに2つ以上の *CacheManager* インスタンスを持つことは推奨されません。
+（特定の構成要件で2つ以上が必要な場合を除きますが、これは最小限の有限数のインスタンスになります）
 
-NOTE: CacheManagers are heavyweight objects, and it's not recommended to have more than one *CacheManager* instance per JVM (Unless specific configuration requirements require more than one, but either way, this would be a minimal and finite number of instances).
-
-Add the following to your main method in class Exercise1:
+Exercise1 クラスの main メソッドに以下を追加します: 
 
 [source, java, role="copypaste"]
 ----
@@ -94,7 +99,9 @@ Add the following to your main method in class Exercise1:
     DefaultCacheManager cacheManager = new DefaultCacheManager();
 ----
 
-Now that we have a `cacheManager`, we can now define what a Cache should look like. We could choose many features from the system (e.g. if we were adding grouping, streams, listeners, strategies for eviction or clustering, etc) we would do that here. The following example just takes the default configuration.
+これで `cacheManager` ができたので、次はキャッシュがどのようなものかを定義することができる。
+システムから様々な機能を選択することができます（例えば、グループ化、ストリーム、リスナー、Eviction やクラスタリングの戦略など）。
+以下の例ではデフォルトの設定を使用しています。
 
 [source, java, role="copypaste"]
 ----
@@ -102,7 +109,7 @@ Now that we have a `cacheManager`, we can now define what a Cache should look li
     cacheManager.defineConfiguration("local", new ConfigurationBuilder().build());
 ----
 
-Perfect! Now that we have defined our cache, it is time for us to get that cache from our *CacheManager*. We have also defined that our cache should have both our Key and Value as `Strings`.
+キャッシュを定義したので、次は *CacheManager* からキャッシュを取得します。また、キャッシュはキーとバリューの両方を `Strings` として持つように定義しました。
 
 [source, java, role="copypaste"]
 ----
@@ -110,7 +117,7 @@ Perfect! Now that we have defined our cache, it is time for us to get that cache
     Cache<String, String> cache = cacheManager.getCache("local");
 ----
 
-Finally, let's put an entry in the Cache. Change the "key" and "value" to anything you'd like.
+最後にキャッシュのエントリを put してみましょう。"key" と ”value” は好きな値に変更してください。
 
 [source, java, role="copypaste"]
 ----
@@ -118,7 +125,7 @@ Finally, let's put an entry in the Cache. Change the "key" and "value" to anythi
     cache.put("key", "value");
 ----
 
-Here we get the value by specifying the key. The key is the same as we used in our previous line's `cache.put`. By specifying a key to the cache, you can get the value stored in it; the same process is also used for an update.
+ここでは、キーを指定してバリューを取得しています。キーは前の行の `cache.put` で使用したものと同じにする必要があります。キャッシュにキーを指定することで、キャッシュに格納されているバリューを取得することができます。更新の場合も同じ処理です。
 
 [source, java, role="copypaste"]
 ----
@@ -126,7 +133,7 @@ Here we get the value by specifying the key. The key is the same as we used in o
     System.out.printf("key = %s\n", cache.get("key"));
 ----
 
-Finally, *CacheManager* is a heavy object; it does a lot, so no need to keep it going on. When done, we close that instance by calling the `stop()` method.
+最後に *CacheManager* は重いオブジェクトであることから、終了したら `stop()` メソッドを呼び出してインスタンスを閉じます。
 
 [source, java, role="copypaste"]
 ----
@@ -134,13 +141,15 @@ Finally, *CacheManager* is a heavy object; it does a lot, so no need to keep it 
     cacheManager.stop();
 ----
 
-Great, now we have all we require to run this exercise. Let's do it.
-You can choose to run it via the Workspace command view by clicking on `Exercise1`. Or you can just open a new terminal from the same view `>_ New Terminal` and run it manually using maven commands. Both methods would work.
+これで本演習に必要なものは揃いました。
+`Exercise1` をクリックして、ワークスペースのコマンドビューから実行することもできます。
+または、`>_ New Terminal` から新しいターミナルを開き、maven コマンドを使用して手動で実行することもできます。どちらの方法でも動作します。
 
-[IMPORTANT]
+[重要]
 ====
 
-Remember that, in the case of running maven directly via terminal, the path to the exercises project is as follows: `/projects/dg8-workshop-labs/dg8-exercises`. Make sure you are in this directory before you run maven commands from the terminal.
+ターミナルから直接 maven コマンドを実行する場合、exercises プロジェクトへのパスは以下のようになることを覚えておいてください： `/projects/dg8-workshop-labs/dg8-exercises`
+ターミナルから maven コマンドを実行する前に、このディレクトリにいることを確認してください。
 
 ====
 
@@ -150,12 +159,12 @@ mvn clean compile && \
 mvn exec:java -Dexec.mainClass=org.acme.Exercise1
 ----
 
-[NOTE]
+[注意]
 ====
-The first time a build runs, it may need to download and cache Maven dependencies. Future builds will go much faster!
+ビルドの初回実行時は Maven の依存関係をダウンロードしてキャッシュします。次にビルドする時はもう少し速くなるでしょう。
 ====
 
-You should see an output similar to the following:
+以下のような出力が表示されるはずです。:
 [source, shell, role="copypaste"]
 ----
 [INFO] --- exec-maven-plugin:3.0.0:java (default-cli) @ dg8-exercises ---
@@ -166,7 +175,7 @@ INFO: ISPN000556: Starting user marshaller 'org.infinispan.commons.marshall.Immu
 key = value
 ----
 
-We can see the `key = value` printed from our code.
+コードから`key = value`と表示されているのが分かります。
 
 === Exercise 2: JSR-107 JCache
 The term cache is generally referred to as a component that stores data in memory so that it's easy to read. It should be used to store values that might be hard to calculate or that need to be accessed rather quickly. As discussed earlier, simple `java.util` packages do now have all the capabilities required, and wiring them by oneself is complex if not hard enough. The Java Specification Request (JSR-107) has been created to define temporary caching API for Java. The specification defines some Standard APIs for storing and managing data both for local and distributed use cases.
