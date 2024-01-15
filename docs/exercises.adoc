@@ -88,7 +88,7 @@ Maps は高速であり、`hashCode` や `equals` といったメソッドを使
 基本的に、`Map` オブジェクトを使用する場合、`Map` を作成しすべてのキーとバリューのペアを格納します。
 しかし、Red Hat Data Grid / Infinispan のようなツールを使用する場合、単純なマップ以上のもの（リスナーやイベントなど）を利用することができます。
 
-注意: CacheManager は重いオブジェクトであり JVM ごとに2つ以上の *CacheManager* インスタンスを持つことは推奨されません。
+NOTE: CacheManager は重いオブジェクトであり JVM ごとに2つ以上の *CacheManager* インスタンスを持つことは推奨されません。
 （特定の構成要件で2つ以上が必要な場合を除きますが、これは最小限の有限数のインスタンスになります）
 
 Exercise1 クラスの main メソッドに以下を追加します: 
@@ -145,7 +145,7 @@ Exercise1 クラスの main メソッドに以下を追加します:
 `Exercise1` をクリックして、ワークスペースのコマンドビューから実行することもできます。
 または、`>_ New Terminal` から新しいターミナルを開き、maven コマンドを使用して手動で実行することもできます。どちらの方法でも動作します。
 
-[重要]
+[Important]
 ====
 
 ターミナルから直接 maven コマンドを実行する場合、exercises プロジェクトへのパスは以下のようになることを覚えておいてください： `/projects/dg8-workshop-labs/dg8-exercises`
@@ -159,7 +159,7 @@ mvn clean compile && \
 mvn exec:java -Dexec.mainClass=org.acme.Exercise1
 ----
 
-[注意]
+[NOTE]
 ====
 ビルドの初回実行時は Maven の依存関係をダウンロードしてキャッシュします。次にビルドする時はもう少し速くなるでしょう。
 ====
@@ -177,10 +177,15 @@ key = value
 
 コードから`key = value`と表示されているのが分かります。
 
-=== Exercise 2: JSR-107 JCache
-The term cache is generally referred to as a component that stores data in memory so that it's easy to read. It should be used to store values that might be hard to calculate or that need to be accessed rather quickly. As discussed earlier, simple `java.util` packages do now have all the capabilities required, and wiring them by oneself is complex if not hard enough. The Java Specification Request (JSR-107) has been created to define temporary caching API for Java. The specification defines some Standard APIs for storing and managing data both for local and distributed use cases.
 
-Let's take a look at how you can use JSR-107 with Red Hat Data Grid/Infinispan. In `Exercise2.java`, add the following code at the designated comment markers:
+=== Exercise 2: JSR-107 JCache
+キャッシュという用語は一般的にデータを読みやすいようにメモリに保存するコンポーネントを指します。
+キャッシュは計算が難しい値や素早くアクセスする必要のある値を保存するために使われます。
+先に述べたように、単純な `java.util` パッケージは必要な機能をすべて備えておらず、自分で設定するには難しく複雑です。
+Java の一時的なキャッシュ API を定義するために Java Specification Request (JSR-107) が作成されました。
+この仕様では、ローカルおよび分散ユースケースの両方でデータを保存および管理するためのいくつかの標準 API が定義されています。
+
+Red Hat Data Grid/Infinispan において JSR-107 を使用する方法を見てみましょう。`Exercise2.java` に対して指定されたコメントマーカーに以下のコードを追加します。:
 
 [source, java, role="copypaste"]
 ----
@@ -193,15 +198,15 @@ Let's take a look at how you can use JSR-107 with Red Hat Data Grid/Infinispan. 
         // TODO: create a cache using the supplied configuration
         Cache<String, String> cache = cacheManager.createCache("myCache", configuration); <5>
 ----
-Let's take a more in-depth look at the code above:
+上のコードをもう少し細かく見てみましょう。:
 
-<1> We use a `CachingProvider`, which is part of the standards API.
-<2> The Caching provider, in turn, gives us a `CacheManager`.
-<3> We create a configuration object for our cache (in this case a `MutableConfiguration`).
-<4> Here we also set the type of keys & values in our Cache (If you remember this is different from our previous exercise since we are using the JSR-107 API now).
-<5> and finally we get our cache.
+<1> 標準 API の一部である `CachingProvider` を使用
+<2> Caching プロバイダは `CacheManager` を提供
+<3> キャッシュの設定オブジェクトの作成 (この場合は `MutableConfiguration`)
+<4> キャッシュのキーとバリューの型を設定（JSR-107 API を使用しているため前回の演習とは異なります）
+<5> キャッシュの取得
 
-Let's put an entry in the Cache. Change the "key" and "value" to anything you'd like.
+キャッシュのエントリを put してみましょう。"key" と ”value” は好きな値に変更してください。
 [source, java, role="copypaste"]
 ----
         // Store and retrieve value
@@ -209,21 +214,21 @@ Let's put an entry in the Cache. Change the "key" and "value" to anything you'd 
         System.out.printf("key = %s\n", cache.get("key"));
 ----
 
-And close the `CacheManager` when you are not going to use it anymore:
+`CacheManager` を使用しない場合はクローズしてください。:
 [source, java, role="copypaste"]
 ----
         // TODO: Stop the cache manager and release all resources
         cacheManager.close();
 ----
 
-Run the above exercise as follows in the CodeReady terminal, or execute the command `Exercise2` in your Workspace Menu on the right.
+CodeReady ターミナルにて次のコマンドを実行するか、右側のワークスペースメニューから `Exercise2` コマンドを実行してください。
 [source, shell, role="copypaste"]
 ----
 mvn clean compile && \
 mvn exec:java -Dexec.mainClass=org.acme.Exercise2
 ----
 
-You should see an output similar to the following. On the last line, you can see your key and value printed.
+以下のような出力が表示されるはずです。最後の行にキーとバリューが表示されています。
 [source, shell, role="copypaste"]
 ----
 [INFO] --- exec-maven-plugin:3.0.0:java (default-cli) @ dg8-exercises ---
@@ -420,26 +425,32 @@ INFO: ISPN000556: Starting user marshaller 'org.infinispan.commons.marshall.Immu
 Result = 45
 ----
 
-=== Exercise 5: Using Transactions
+=== Exercise 5: トランザクション管理
 
-Transactions are essential in any business application. Usually, the transaction is used with the dataset and is quite often related to a database. Still, that's not exactly right, if you have a distributed dataset, one needs transactions for business logic to prevail. Infinispan provides transaction support. There can be a scenario in which the cluster adds a new node to the cluster or an entry has been written by another node. The Infinispan transaction manager is aware of such events and handles them. You can read more about the design of transactions in the https://github.com/infinispan/infinispan-designs[Infinispan Designs repository].
+トランザクションはどのようなビジネスアプリケーションにおいても必要不可欠です。
+通常、トランザクションはデータセットと一緒に使われ、データベースに関連することが多いです。
+分散されたデータセットがある場合、ビジネスロジックにトランザクションが必要です。
+Infinispan はトランザクションをサポートしています。
+クラスタに新しいノードが追加されたり、他のノードによってエントリが書き込まれたりするシナリオが考えられます。
+Infinispanのトランザクションマネージャはそのようなイベントを認識し処理します。
+トランザクションの設計については、https://github.com/infinispan/infinispan-designs[Infinispan Designs repository] を参照してください。
 
 [NOTE]
 ====
-Please remove the following lines in the main method.
+main メソッドから以下の行を削除してください。
 
       /* UNCOMMENT When starting this exercise
       UNCOMMENT When starting this exercise */
 ====
 
-Let's get the TransactionManager from the cache:
+キャッシュから TransactionManager を取得しましょう。:
 [source, java, role="copypaste"]
 ----
         //TODO Obtain the transaction manager
         TransactionManager transactionManager = cache.getAdvancedCache().getTransactionManager();
 ----
 
-We begin our transaction, write two entries, and then close it.
+トランザクションを開始し、2つのエントリを書き込み、コミットします。
 
 [source, java, role="copypaste"]
 ----
@@ -450,7 +461,7 @@ We begin our transaction, write two entries, and then close it.
         transactionManager.commit();
 ----
 
-Let's also do a rollback scenario. So we write to entries and rollback.
+ロールバックのシナリオも考えましょう。エントリを書き込み、ロールバックします。
 
 [source, java, role="copypaste"]
 ----
@@ -461,9 +472,9 @@ Let's also do a rollback scenario. So we write to entries and rollback.
         transactionManager.rollback();
 ----
 
-Now let's run our code and see how it works.
+コードを実行し、どのように機能するか見てみましょう。
 
-Run the above exercise as follows in the CodeReady terminal, or you can also choose to execute the command `Exercise5` in your Workspace Menu on the right
+CodeReady ターミナルにて次のコマンドを実行するか、右側のワークスペースメニューから `Exercise5` コマンドを実行してください。
 
 [source, shell, role="copypaste"]
 ----
@@ -471,7 +482,7 @@ mvn clean compile && \
 mvn exec:java -Dexec.mainClass=org.acme.Exercise5
 ----
 
-You should be able to see an output similar to the following:
+以下のような出力が表示されるはずです。:
 [source, shell, role="copypaste"]
 ----
 [INFO] --- exec-maven-plugin:3.0.0:java (default-cli) @ dg8-exercises ---
@@ -489,18 +500,8 @@ key1 = value1
 key2 = value2
 ----
 
-So as you can see, even though we wrote the new values, as we rolled back, the value was rewritten to the initial value of the transaction.
+このように、新しい値を書き込んだにもかかわらず、ロールバックすると値はトランザクションの初期値に書き換えられます。
 
 ==== Congratulations!
 
-You have completed the first introductory exercises to Red Hat Data Grid 8.
-
-1. *Exercise 1* - Creating a Cache
-2. *Exercise 2* - JSR-107, JCache
-3. *Exercise 3* - Functional API
-4. *Exercise 4* - Streaming data from the Cache
-5. *Exercise 5* - Using Transactions
-
-You should now be able to create caches, stream data and so much more.
-Let's move on to the next section and experience more in-depth examples.
-
+これで Red Hat Data Grid の基本機能のセクションは完了です。次のセクションへ進み、より詳細な例を体験しましょう。
