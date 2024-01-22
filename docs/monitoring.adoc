@@ -1,30 +1,41 @@
-=== Monitoring the Data Grid
+=== Ree Hat Data Grid モニタリング
 :experimental:
 
-==== Understanding the Stack
-OpenShift Container Platform includes a pre-configured, pre-installed, and self-updating monitoring stack that provides monitoring for core platform components. OpenShift Container Platform delivers monitoring best practices out of the box. A set of alerts are included by default that immediately notifies cluster administrators about issues with a cluster. Default dashboards in the OpenShift Container Platform web console include visual representations of cluster metrics to help you quickly understand the state of your cluster.
+==== モニタリングスタックの理解
+OpenShift Container Platform には、設定済み・インストール済み・自身で更新することのできるモニタリングスタックが含まれており、プラットフォームのコアコンポーネントを監視することができます。
+OpenShift Container Platform は、モニタリングのベストプラクティスを提供しています。
+クラスタの問題をクラスタ管理者に即座に通知するアラートのセットがデフォルトで含まれています。
+OpenShift Container Platform Web コンソールのデフォルトのダッシュボードには、クラスタのメトリクスを可視化するコンポーネントが提供されており、クラスタの状態を迅速に把握することができます。
 
-The OpenShift Container Platform monitoring stack is based on the Prometheus open-source project and its wider ecosystem. The monitoring stack includes the following:
+OpenShift Container Platform のモニタリングスタックは、Prometheus オープンソースプロジェクトとその広範なエコシステムに基づいています。
+モニタリングスタックには以下のコンポーネントが含まれています。:
 
-*Default platform monitoring components.* 
+*デフォルトのプラットフォームモニタリングコンポーネント* 
 
-A set of platform monitoring components are installed in the `openshift-monitoring` project by default during an OpenShift Container Platform installation. This provides monitoring for core OpenShift Container Platform components including Kubernetes services. The default monitoring stack also enables remote health monitoring for clusters. These components are illustrated in the Installed by default section in the following diagram.
+プラットフォームモニタリングコンポーネントの一式は、OpenShift Container Platform のインストール中にデフォルトで `openshift-monitoring` プロジェクトにインストールされます。
+これは、Kubernetes サービスを含む OpenShift Container Platform のコアコンポーネントの監視を提供します。
+デフォルトのモニタリングスタックは、クラスタのリモートヘルスモニタリングも可能にします。
+これらのコンポーネントは、以下の図のデフォルトでインストールされているセクションに示されています。
 
-*Components for monitoring user-defined projects.* 
+*ユーザー定義プロジェクトをモニタリングするためのコンポーネント* 
 
-After optionally enabling monitoring for user-defined projects, additional monitoring components are installed in the `openshift-user-workload-monitoring` project. This provides monitoring for user-defined projects. These components are illustrated in the User section in the following diagram.
+オプションでユーザー定義プロジェクトのモニタリングを有効にすると、`openshift-user-workload-monitoring` プロジェクトに追加のモニタリングコンポーネントがインストールされます。
+これにより、ユーザー定義プロジェクトのモニタリングが可能になります。
+これらのコンポーネントは、以下の図のユーザーセクションに示されています。
 
 image::ocp-prometheus-arch.png[Monitoring - Topology, 700]
 
-In our cluster, we have already enabled the user-workloads monitoring, which means that all our applications exposing `/metrics` can be scraped by Prometheus in all our user namespaces. It is also possible to have one's own Prometheus installation, hence a range of flexibility is available for different architecture and infrastructure practices.
+本ハンズオンのクラスタでは、既にユーザー定義プロジェクトのモニタリングが有効化されており、`/metrics` を公開するすべてのアプリケーションでは、すべてのユーザーネームスペースにおいて Prometheus によってスクレイピングすることができます。
+また、独自の Prometheus をインストールすることも可能であるため、様々なアーキテクチャやインフラに柔軟に対応することができます。
 
-Let's take a look at metrics in Openshift for our workloads and then also take a look at the metrics that are being scrapped via the Openshift web console. Data Grid exposes metrics that can be used by Prometheus and Grafana for monitoring and visualizing the cluster state.
+Openshift のワークロードのメトリクスを見て、Openshift の Web コンソール経由で収集されているメトリクスも見てみましょう。
+Data Grid は、クラスタの状態を監視・可視化するため、Prometheus や Grafana が利用できるメトリクスを公開しています。
 
-In the OpenShift Web Console, select the *</> Developer* perspective. You should be able to see the `datagrid-service` as shown in the picture below. Click the service of the Data Grid cluster and in the tab on the right click `Observe`.
+OpenShift Web Console において、*</> Developer* パースペクティブを選択します。下図のように `datagrid-service` が表示されるはずです。Data Grid クラスタのサービスをクリックし、右側のタブで `Observe` をクリックします。
 
 image::monitoring-dg-dev-view.png[Monitoring - Topology, 700]
 
-Remember the full definition of the Infinispan CR that we created in a previous section:
+前の演習で作成した Infinispan カスタムリソースの定義を思い出してください。:
 
 [source, yaml]
 ----
@@ -39,19 +50,20 @@ spec:
     type: LoadBalancer <4>
 ----
 
-<1> Tell Kubernetes/Openshift that the Custom resource type is `Infinispan`.
-<2> Specify the name of our cluster as `datagrid-service`.
-<3> Specify the replicas we want for our service.
-<4> Expose the grid to the outside world.
+<1> Kubernetes/Openshift に対してカスタムリソースタイプが `Infinispan` であると指定
+<2> クラスタ名を `datagrid-service` と指定
+<3> サービスに必要なレプリカを指定
+<4> Data Grid を外部へ公開
 
-We are going to open that YAML definition again to check if monitoring is enabled.
+モニタリングが有効になっているかチェックするために、もう一度YAML定義を開きます。
 
-<1> Open the Administrator perspective in the Openshift console.
-<2> Navigate to `Installed Operators > Data Grid > All instances`.
-<3> Click on `datagrid-service`.
-<4> Finally click on the YAML tab.
+<1> OpenShift コンソールにおいて Administrator パースペクティブを開きます。
+<2> `Installed Operators > Data Grid > All instances`に移動します。
+<3> `datagrid-service`をクリックします。
+<4> 最後に YAML タブをクリックする。
 
 By default, the monitoring should be enabled. Look for the following construct which is set to `true`:
+デフォルトではモニタリングは有効になっているはずです。`true` に設定されている以下の構文を探してください。:
 
 [source, yaml]
 ----
@@ -60,39 +72,40 @@ metadata:
     infinispan.org/monitoring: 'true'
 ----
 
-The following picture also shows an example.
+次の写真は一例です。
 
 image::monitoring-dg-yaml-view.png[Monitoring - Topology, 700]
 
 
-This means that our Data Grid is exposing metrics at the /metrics endpoint for Prometheus to gather.
+これは、Prometheus がメトリクスを収集するために、Data Grid が /metrics エンドポイントでメトリクスを公開していることを意味します。
 
-With Openshift 4.6+ you can now also get the Prometheus metrics. Let's take a look at the metrics from our Data Grid services. 
+Openshift 4.6 以上では、Prometheus のメトリクスも取得できるようになりました。Data Grid サービスのメトリクスを見てみましょう。
 
-<1> Go to the Openshift Developer perspective in the Openshift Console.
-<2> Make sure you have chosen the right namespace in this case `{{ USER_ID }}-cache`.
-<3> Click Observe on the left menu, then metrics.
-<4> Open the Metrics tab and confirm that you can query Data Grid metrics, via the custom query with the following text and press enter.
+<1> OpenShift Console の Developer パースペクティブに移動します。
+<2> 正しい名前空間（ここでは `{{ USER_ID }}-cache` ）を選択していることを確認します。
+<3> 左メニューの Observe をクリックし、Metrics をクリックします。
+<4> Metricsタブを開き、Data Grid のメトリクスにクエリできることを確認します。
 
 [source, shell, role="copypaste"]
 ----
 vendor_cache_manager_default_cluster_size
 ----
 
-The following picture shows an example view showing us that we have 2 replicas in our cluster.
+次の図は、クラスタに2つのレプリカがあることを示すビューの例です。
 
 image::monitoring-dg-metrics-view.png[Monitoring - Topology, 700]
 
-You can try a bunch of other queries using the custom query area. 
+カスタムクエリーエリアを使って、他のクエリーも試すことができます。
 
-Perfect so we have Prometheus metrics working in a well-integrated environment. Let's also configure a Grafana dashboard.
+これで、Prometheusのメトリクスがうまく統合された環境で動作するようになった。Grafanaダッシュボードも設定しましょう。
 
-To support various needs, the Data Grid Operator integrates with the community version of the Grafana Operator to create dashboards for Data Grid services.
-Grafana is an open-source solution that enables pulling up metrics. It makes the data more meaningful by organizing it via multiple Datasources from a distributed deployment. E.g if we have a bunch of Data grid clusters we could use this dashboard to track and monitor all of them. Grafana dashboards make this possible. 
- 
-Let's configure our Grafana dashboard. The Data grid operator will take care of this for us. But first, we will need to create a Grafana instance so the operator knows where to configure the Data Grid dashboard.
+様々なニーズをサポートするために、Data Grid Operator はコミュニティ版の Grafana Operator と連携し、Data Grid サービスのダッシュボードを作成することができます。
+Grafana は、メトリクスを可視化するオープンソースのソリューションです。複数のデータソースを介してデータを整理することで、データをより意味のあるものにします。
+例えば、Data Grid クラスターがたくさんある場合、このダッシュボードを使用してそれらすべてを追跡し、監視することができます。
 
-First, let's create a Service Account for our application, press the `+` sign on the top right corner and load the following YAML. Press create. Also shown in the following picture.
+Grafana ダッシュボードを設定してみましょう。Data Grid Operator がこれをやってくれます。しかし、その前に Grafana インスタンスを作成し、Operator が Data Grid ダッシュボードを構成する場所を知る必要があります。
+
+まず、アプリケーションの Service Account を作成しましょう。右上の `+` 記号を押して、次の YAML を読み込み、Create を押します。
 
 image::monitoring-create-sa-yaml.png[Monitoring - Topology, 500]
 
@@ -106,11 +119,11 @@ metadata:
 ----
 
 
-Now, we have set up a service account that will enable Grafana to read the Data Grid metrics.
+これで、Grafana が Data Grid のメトリクスを読み込めるようにする Service Account を設定しました。
 
-Let's set up a Grafana instance as well. 
+Grafana　インスタンスもセットアップしてみましょう。
 
-Press the `+` sign on the top right corner in the Openshift Console and load the following CR YAML to create a Grafana instance. 
+OpenShift Console の右上にある `+` 記号を押し、以下のカスタムリソース YAML を読み込んで Grafana インスタンスを作成します。
 
 [source, yaml, role="copypaste"]
 ----
@@ -140,7 +153,8 @@ spec:
             - grafana
 ----
 
-In order to ensure that we can get metrics from Data Grid into Grafana via Prometheus we will set up a Datasource. In the Openshift console, ensure you are in the project: {{ USER_ID }}-cache and then press the `+` sign on the top right corner and copy the following YAML. 
+Prometheus 経由で Data Grid から Grafana にメトリクスを取得できるようにするために Datasource を設定します。
+Openshiftのコンソールで、プロジェクトに入っていることを確認します： {{ USER_ID }}-cache に入っていることを確認し、右上の `+` 記号を押して以下の YAML をコピーします。
 
 [source, shell, role="copypaste"]
 ----
@@ -167,19 +181,21 @@ spec:
       url: 'https://thanos-querier.openshift-monitoring.svc.cluster.local:9091'
 ----
 
-WARNING: You need to replace the value of the bearer token.
+WARNING: Bearer Token の値を置き換える必要があります。
 
-For this, head off to your CodeReady workspaces Terminal and run the following command in the CodeReady workspaces terminal. Ensure that you are already logged in to Openshift via the terminal and that your project is `{{ USER_ID }}-cache`.
+そのため、CodeReady Workspaces のターミナルにて以下のコマンドを実行します。ターミナルから OpenShift にログインしていること、プロジェクトが `{USER_ID }}-cache` であることを確認してください。
 
 [source, shell, role="copypaste"]
 ----
 oc serviceaccounts get-token infinispan-monitoring
 ----
 
-The output should give you a large String which is the actual token that we will use for the Grafana Datasource. Copy this token and head back to the Openshift console and replace the `<YOUR  BEARER TOKEN HERE>` with your actual token. The token is long and encrypted. It enables Grafana to integrate with Data Grid. Press create.
+出力には、Grafana Datasource　に使用する実際のトークンである長い文字列が得られるはずです。
+このトークンをコピーして OpenShift のコンソールに戻り、`<YOUR BEARER TOKEN HERE>` を実際のトークンに置き換えてください。トークンは長く、暗号化されています。これによって Grafana は Data Grid と連携できるようになります。
 
-Perfect! You are moving along nicely. One final step. Let's configure our dashboard. Data Grid should be able to watch this namespace e.g. in case Grafana was in another namespace. In our case, it isn't. So all we need to do is create a dashboard YAML. Again click the `+` sign on the top right corner of your Openshift console to create a new YAML config.
-
+最後のステップとしてダッシュボードを設定しましょう。
+例えば、Grafana が別のネームスペースにあった場合、Data Grid はこのネームスペースを監視できるはずです。
+そこで必要なのは、ダッシュボードのYAMLを作成することです。OpenShift コンソールの右上にある `+` 記号をクリックして、新しい YAML 設定を作成します。
 
 [source, shell, role="copypaste"]
 ----
@@ -193,22 +209,24 @@ data:
   grafana.dashboard.monitoring.key: middleware
 ----
 
-Press `create` and this should create a new dashboard in Grafana that will be called `Infinispan`. All Data Grid instances in our namespace will be sending data to Prometheus which is then loaded up in the Grafana dashboard. If this CR is removed, the dashboard will stop existing.
+`create` を押すと、Grafana に `Infinispan` という新しいダッシュボードが作成されます。
+ネームスペース内のすべての Data Grid インスタンスは Prometheus にデータを送信し、それが Grafana ダッシュボードにロードされます。
+このカスタムリソースが削除されるとダッシュボードは存在しなくなります。
 
-Head over to `Networking > Routes`, and click the Grafana route. You should see the Grafana landing page. As shown in the picture below click the Manage menu and you should be able to see `{{ USER_ID }}-cache` and then under it the link to the `Infinispan` dashboard. 
+`Networking > Routes`に向かい、Grafana Route をクリックします。Grafana のランディングページが表示されるはずです。
+下の図のように、管理メニューをクリックすると、`{USER_ID }}-cache` が表示され、その下に `Infinispan` ダッシュボードへのリンクが表示されます。
 
 image::monitoring-grafana-dashboard-1.png[Monitoring - Topology, 700]
 
-Click on `Infinispan` and the following dashboard should load up. the metrics details might differ.
+`Infinispan`をクリックすると、以下のダッシュボードがロードされます。
 
 image::monitoring-grafana-dashboard-2.png[Monitoring - Topology, 700]
 
 
-=== Recap
-<1> Service monitor via the DataGrid Operator
-<2> Metrics via Openshift console and prometheus
-<4> Created Grafana Datasource
-<5> Created Grafana Dashboard
+=== まとめ
+<1> DataGrid Operator によるサービス監視
+<2> OpenShift コンソールと Prometheus によるメトリクス
+<4> Grafana データソースの作成
+<5> Grafana ダッシュボードの作成
 
-
-*Congratulations!!* you have completed the metrics and monitoring labs. All the instances that will be created in this namespace etc will show up in the metrics and the dashboard. Let's move on to the next labs and do exactly that! 
+メトリックスとモニタリングの演習が完了しました。次の演習へ進みましょう。
