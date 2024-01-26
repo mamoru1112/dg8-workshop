@@ -1,8 +1,8 @@
-=== Ree Hat Data Grid モニタリング
+=== Red Hat Data Grid モニタリング
 :experimental:
 
 ==== モニタリングスタックの理解
-OpenShift Container Platform には、設定済み・インストール済み・自身で更新することのできるモニタリングスタックが含まれており、プラットフォームのコアコンポーネントを監視することができます。
+OpenShift Container Platform には、モニタリングスタックがインストールされており、プラットフォームのコアコンポーネントを監視することができます。
 OpenShift Container Platform は、モニタリングのベストプラクティスを提供しています。
 クラスタの問題をクラスタ管理者に即座に通知するアラートのセットがデフォルトで含まれています。
 OpenShift Container Platform Web コンソールのデフォルトのダッシュボードには、クラスタのメトリクスを可視化するコンポーネントが提供されており、クラスタの状態を迅速に把握することができます。
@@ -15,13 +15,13 @@ OpenShift Container Platform のモニタリングスタックは、Prometheus �
 プラットフォームモニタリングコンポーネントの一式は、OpenShift Container Platform のインストール中にデフォルトで `openshift-monitoring` プロジェクトにインストールされます。
 これは、Kubernetes サービスを含む OpenShift Container Platform のコアコンポーネントの監視を提供します。
 デフォルトのモニタリングスタックは、クラスタのリモートヘルスモニタリングも可能にします。
-これらのコンポーネントは、以下の図のデフォルトでインストールされているセクションに示されています。
+これらのコンポーネントは、以下の図の "Installed by default" セクションに示されています。
 
 *ユーザー定義プロジェクトをモニタリングするためのコンポーネント* 
 
 オプションでユーザー定義プロジェクトのモニタリングを有効にすると、`openshift-user-workload-monitoring` プロジェクトに追加のモニタリングコンポーネントがインストールされます。
 これにより、ユーザー定義プロジェクトのモニタリングが可能になります。
-これらのコンポーネントは、以下の図のユーザーセクションに示されています。
+これらのコンポーネントは、以下の図の "User" セクションに示されています。
 
 image::ocp-prometheus-arch.png[Monitoring - Topology, 700]
 
@@ -31,7 +31,7 @@ image::ocp-prometheus-arch.png[Monitoring - Topology, 700]
 Openshift のワークロードのメトリクスを見て、Openshift の Web コンソール経由で収集されているメトリクスも見てみましょう。
 Data Grid は、クラスタの状態を監視・可視化するため、Prometheus や Grafana が利用できるメトリクスを公開しています。
 
-OpenShift Web Console において、*</> Developer* パースペクティブを選択します。下図のように `datagrid-service` が表示されるはずです。Data Grid クラスタのサービスをクリックし、右側のタブで `Observe` をクリックします。
+OpenShift Web Console において、*</> Developer* パースペクティブを選択します。下図のように `datagrid-service` が表示されるはずです。Data Grid クラスタのサービスをクリックし、右側のタブで `監視` をクリックします。
 
 image::monitoring-dg-dev-view.png[Monitoring - Topology, 700]
 
@@ -58,11 +58,10 @@ spec:
 モニタリングが有効になっているかチェックするために、もう一度YAML定義を開きます。
 
 <1> OpenShift コンソールにおいて Administrator パースペクティブを開きます。
-<2> `Installed Operators > Data Grid > All instances`に移動します。
-<3> `datagrid-service`をクリックします。
+<2> `インストール済みの Operator > Data Grid > すべてのインスタンス` に移動します。
+<3> `datagrid-service` をクリックします。
 <4> 最後に YAML タブをクリックする。
 
-By default, the monitoring should be enabled. Look for the following construct which is set to `true`:
 デフォルトではモニタリングは有効になっているはずです。`true` に設定されている以下の構文を探してください。:
 
 [source, yaml]
@@ -83,8 +82,8 @@ Openshift 4.6 以上では、Prometheus のメトリクスも取得できるよ�
 
 <1> OpenShift Console の Developer パースペクティブに移動します。
 <2> 正しい名前空間（ここでは `{{ USER_ID }}-cache` ）を選択していることを確認します。
-<3> 左メニューの Observe をクリックし、Metrics をクリックします。
-<4> Metricsタブを開き、Data Grid のメトリクスにクエリできることを確認します。
+<3> 左メニューの "監視" をクリックし、"メトリクス" をクリックします。
+<4> メトリクスタブを開き、Data Grid のメトリクスにクエリできることを確認します。
 
 [source, shell, role="copypaste"]
 ----
@@ -97,7 +96,7 @@ image::monitoring-dg-metrics-view.png[Monitoring - Topology, 700]
 
 カスタムクエリーエリアを使って、他のクエリーも試すことができます。
 
-これで、Prometheusのメトリクスがうまく統合された環境で動作するようになった。Grafanaダッシュボードも設定しましょう。
+これで、Prometheusのメトリクスがうまく統合された環境で動作するようになりました。Grafana ダッシュボードも設定してみましょう。
 
 様々なニーズをサポートするために、Data Grid Operator はコミュニティ版の Grafana Operator と連携し、Data Grid サービスのダッシュボードを作成することができます。
 Grafana は、メトリクスを可視化するオープンソースのソリューションです。複数のデータソースを介してデータを整理することで、データをより意味のあるものにします。
@@ -105,7 +104,7 @@ Grafana は、メトリクスを可視化するオープンソースのソリュ
 
 Grafana ダッシュボードを設定してみましょう。Data Grid Operator がこれをやってくれます。しかし、その前に Grafana インスタンスを作成し、Operator が Data Grid ダッシュボードを構成する場所を知る必要があります。
 
-まず、アプリケーションの Service Account を作成しましょう。右上の `+` 記号を押して、次の YAML を読み込み、Create を押します。
+まず、アプリケーションの Service Account を作成しましょう。右上の `+` 記号を押して、次の YAML を読み込み、"作成" を押します。
 
 image::monitoring-create-sa-yaml.png[Monitoring - Topology, 500]
 
@@ -121,7 +120,7 @@ metadata:
 
 これで、Grafana が Data Grid のメトリクスを読み込めるようにする Service Account を設定しました。
 
-Grafana　インスタンスもセットアップしてみましょう。
+Grafana インスタンスもセットアップしてみましょう。
 
 OpenShift Console の右上にある `+` 記号を押し、以下のカスタムリソース YAML を読み込んで Grafana インスタンスを作成します。
 
@@ -183,7 +182,7 @@ spec:
 
 WARNING: Bearer Token の値を置き換える必要があります。
 
-そのため、CodeReady Workspaces のターミナルにて以下のコマンドを実行します。ターミナルから OpenShift にログインしていること、プロジェクトが `{USER_ID }}-cache` であることを確認してください。
+そのため、OpenShift Dev Spaces のターミナルにて以下のコマンドを実行します。ターミナルから OpenShift にログインしていること、プロジェクトが `{USER_ID }}-cache` であることを確認してください。
 
 [source, shell, role="copypaste"]
 ----
@@ -209,24 +208,17 @@ data:
   grafana.dashboard.monitoring.key: middleware
 ----
 
-`create` を押すと、Grafana に `Infinispan` という新しいダッシュボードが作成されます。
+`作成` を押すと、Grafana に `Infinispan` という新しいダッシュボードが作成されます。
 ネームスペース内のすべての Data Grid インスタンスは Prometheus にデータを送信し、それが Grafana ダッシュボードにロードされます。
 このカスタムリソースが削除されるとダッシュボードは存在しなくなります。
 
-`Networking > Routes`に向かい、Grafana Route をクリックします。Grafana のランディングページが表示されるはずです。
-下の図のように、管理メニューをクリックすると、`{USER_ID }}-cache` が表示され、その下に `Infinispan` ダッシュボードへのリンクが表示されます。
+Administrator パースペクティブから `ネットワーク > ルート` に向かい、Grafana Route をクリックします。Grafana のランディングページが表示されるはずです。
+下の図のように、管理メニューをクリックすると、`{{ USER_ID }}-cache` が表示され、その下に `Infinispan` ダッシュボードへのリンクが表示されます。
 
 image::monitoring-grafana-dashboard-1.png[Monitoring - Topology, 700]
 
-`Infinispan`をクリックすると、以下のダッシュボードがロードされます。
+`Infinispan` をクリックすると、以下のダッシュボードがロードされます。
 
 image::monitoring-grafana-dashboard-2.png[Monitoring - Topology, 700]
 
-
-=== まとめ
-<1> DataGrid Operator によるサービス監視
-<2> OpenShift コンソールと Prometheus によるメトリクス
-<4> Grafana データソースの作成
-<5> Grafana ダッシュボードの作成
-
-メトリックスとモニタリングの演習が完了しました。次の演習へ進みましょう。
+メトリックスとモニタリングの演習が完了しました。本ハンズオンは一旦完了です。時間に余裕のある方はオプションの演習問題へ進みましょう。

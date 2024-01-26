@@ -7,17 +7,17 @@ Red Hat Data Grid の基本的な機能のいくつかを掘り下げていき�
 
 == ワークショップの開発環境の説明
 
-本ワークショップでは、開発環境として https://www.eclipse.org/che/[Eclipe Che, window=_blank] ベースのオンライン IDE である Red Hat CodeReady Workspaces を利用します。Red Hat CodeReady Workspaces には以下の特徴があります。:
+本ワークショップでは、開発環境として https://www.eclipse.org/che/[Eclipe Che, window=_blank] ベースのオンライン IDE である Red Hat OpenShift Dev Spaces を利用します。Red Hat OpenShift Dev Spaces には以下の特徴があります。:
 
 * CLI ツールをラップトップにインストールする必要はありません。
 * 参加者全員が同じツールのバージョンと設定を持つことができます。
 * *すべてのファイルの変更は数秒ごとに自動保存されます* ので、変更を明示的に保存する必要はありません。
 
-{{ CHE_URL }}[CodeReady Workspaces へアクセス^] し、アサインされたユーザー名・パスワード (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`) を用いてログインしてください。:
+{{ CHE_URL }}[OpenShift Dev Spaces へアクセス^] し、アサインされたユーザー名・パスワード (e.g. `{{ USER_ID }}/{{ CHE_USER_PASSWORD }}`) を用いてログインしてください。:
 
 image::codeready-login.png[codeready-login, 700, align="center"]
 
-CodeReady にログインすると、開発ワークスペースにアクセスできます。ワークスペースはすでに作成されています。左メニューのワークスペースをクリックすると開発環境を開くことができます。
+OpenShift Dev Spaces にログインすると、開発ワークスペースにアクセスできます。ワークスペースはすでに作成されています。左メニューのワークスペースをクリックすると開発環境を開くことができます。
 
 左メニューには、プロジェクトエクスプローラー・検索・バージョン管理（Gitなど）・デバッグ・その他のプラグインをナビゲートするためのアイコンが表示されています。本ワークショップではこれらを使います。クリックしてそれぞれの機能を確認してください。:
 
@@ -28,7 +28,7 @@ image::codeready-icons.png[codeready-icons, 400, align="center"]
 表示や挙動がおかしくなったりブラウザが壊れているように見える場合には、ブラウザのタブを更新してリロードしてください。
 ====
 
-CodeReadyワークスペースの多くの機能には *Commands*　を使ってアクセスすることができます。
+OpenShift Dev Spaces ワークスペースの多くの機能には *Commands* を使ってアクセスすることができます。
 ホームページには、いくつかのコマンドがリンク付きで表示されています（_New File..._、_Git Clone..._など）。
 メニューにないコマンドを実行する必要がある場合は、kbd:[F1] を押してコマンドウィンドウを開くか、より伝統的な kbd:[Control+SHIFT+P] (Mac OS Xでは kbd:[Command+SHIFT+P] ) を押すことができます。
 
@@ -58,12 +58,12 @@ image::codeready-view.png[codeready-view, 700, align="center"]
 
 == 演習問題
 
-この最初のラボは5つの演習から構成されています。これらの演習では、Red Hat Data Grid の機能の一部を垣間見ることができ、アプリケーションで Data Grid を使用する方法を学ぶための良い出発点となります。以下は演習の概要です:
+最初は5つの演習問題から構成されています。これらの演習では、Red Hat Data Grid の機能の一部を垣間見ることができ、アプリケーションで Data Grid を使用する方法を学ぶための良い出発点となります。以下は演習の概要です:
 
 1. *Exercise 1* - キャッシュの作成
 2. *Exercise 2* - JSR-107, JCache
-3. *Exercise 3* - Functional API        (本ワークショップでは実施しない)
-4. *Exercise 4* - Streaming data from the Cache         (本ワークショップでは実施しない)
+3. *Exercise 3* - Functional API (オプション)
+4. *Exercise 4* - Streaming data from the Cache (オプション)
 5. *Exercise 5* - トランザクション管理
 
 各演習問題には対応する `.java` ファイル（例：`Exercise1.java`）があります。このラボにおいて必要な maven プロジェクトは `dg8-exercises` です。
@@ -81,7 +81,7 @@ image::codeready-view-exercises.png[codeready-view-exercises, 700, align="center
 初めに、Java の _Maps_ がなぜキャッシュに適しているか考えましょう。
 Maps は高速であり、`hashCode` や `equals` といったメソッドを使って、Maps にデータを追加する方法を決定します。
 これは、データを読み書きするのに十分な速度（O(1)）が出せるということであり、パフォーマンスにとって例外的なことでありキャッシュに期待されることでもあります。
-データの保存はキーとバリューのペアで行われます。``Map`` には他にもいろいろあるが、まずは基本的なキャッシュのハウツーから始めましょう。
+データの保存はキーとバリューのペアで行われます。``Map`` には他にも色々ありますが、まずは基本的なキャッシュの使い方から始めましょう。
 
 *CacheManager*  は、Cache インスタンスを取得するための主なメカニズムであり、キャッシュを使用するための出発点として利用されます。
 
@@ -99,7 +99,7 @@ Exercise1 クラスの main メソッドに以下を追加します:
     DefaultCacheManager cacheManager = new DefaultCacheManager();
 ----
 
-これで `cacheManager` ができたので、次はキャッシュがどのようなものかを定義することができる。
+これで `cacheManager` ができたので、次はキャッシュがどのようなものかを定義することができます。
 システムから様々な機能を選択することができます（例えば、グループ化、ストリーム、リスナー、Eviction やクラスタリングの戦略など）。
 以下の例ではデフォルトの設定を使用しています。
 
@@ -175,7 +175,7 @@ INFO: ISPN000556: Starting user marshaller 'org.infinispan.commons.marshall.Immu
 key = value
 ----
 
-コードから`key = value`と表示されているのが分かります。
+コードから `key = value` と表示されているのが分かります。
 
 
 === Exercise 2: JSR-107 JCache
@@ -221,7 +221,7 @@ Red Hat Data Grid/Infinispan において JSR-107 を使用する方法を見て
         cacheManager.close();
 ----
 
-CodeReady ターミナルにて次のコマンドを実行するか、右側のワークスペースメニューから `Exercise2` コマンドを実行してください。
+OpenShift Dev Spaces ターミナルにて次のコマンドを実行するか、右側のワークスペースメニューから `Exercise2` コマンドを実行してください。
 [source, shell, role="copypaste"]
 ----
 mvn clean compile && \
@@ -433,7 +433,7 @@ Result = 45
 Infinispan はトランザクションをサポートしています。
 クラスタに新しいノードが追加されたり、他のノードによってエントリが書き込まれたりするシナリオが考えられます。
 Infinispanのトランザクションマネージャはそのようなイベントを認識し処理します。
-トランザクションの設計については、https://github.com/infinispan/infinispan-designs[Infinispan Designs repository] を参照してください。
+トランザクションの設計については、 https://github.com/infinispan/infinispan-designs[Infinispan Designs repository] を参照してください。
 
 [NOTE]
 ====
@@ -474,7 +474,7 @@ main メソッドから以下の行を削除してください。
 
 コードを実行し、どのように機能するか見てみましょう。
 
-CodeReady ターミナルにて次のコマンドを実行するか、右側のワークスペースメニューから `Exercise5` コマンドを実行してください。
+OpenShift Dev Spaces ターミナルにて次のコマンドを実行するか、右側のワークスペースメニューから `Exercise5` コマンドを実行してください。
 
 [source, shell, role="copypaste"]
 ----

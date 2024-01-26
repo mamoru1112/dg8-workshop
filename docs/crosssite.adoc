@@ -2,42 +2,41 @@
 
 あるデータセンターの Data Grid Operator は、別のデータセンターにおいて別の Data Grid Operator が管理している Data Grid クラスタを発見することができます。この発見により、Data Grid は自動的にクロスサイトビューを形成し、グローバルクラスタを作成することができます。
 
-次の図は、ニューヨーク (NYC) のデータセンタにて Data Grid Operator が Data Grid クラスタを管理する例です。ロンドン (LON) の別のデータセンタでも Data Grid Operator が Data Grid クラスタを管理しています．
+次の図は、ニューヨーク (NYC) のデータセンターにて Data Grid Operator が Data Grid クラスタを管理する例です。ロンドン (LON) の別のデータセンターでも Data Grid Operator が Data Grid クラスタを管理しています。
 
 image::xsite-rhdg.png[Cross site - Topology, 700]
 
 
 Data Grid Operator は、Kubernetes API を使用して、NYC と LON にある OpenShift Container Platform クラスタ間のセキュアな接続を確立します。
-その後、Data Grid Operato は、Data Grid クラスタがロケーションを超えてデータをバックアップできるように、クロスサイトレプリケーションサービスを作成します。
+その後、Data Grid Operator は、Data Grid クラスタがロケーションを超えてデータをバックアップできるように、クロスサイトレプリケーションサービスを作成します。
 
 各 Data Grid クラスタには、すべてのバックアップ要求を調整するサイトマスタノードが1つあります。
-Data Grid Operator はサイトマスタノードを識別し、クロスサイトレプリケーションサービスを経由するすべてのトラフィックがサイトマスタに向かうようにします。
+Data Grid Operator はサイトマスタノードを識別し、クロスサイトサービスを経由するすべてのトラフィックがサイトマスタに向かうようにします。
 
-現在のサイトマスタノードがオフラインになると、新しいノードがサイトマスタになります。Data Grid Operator は新しいサイトマスタノードを自動的に検出し、バックアップ要求を転送するようにクロスサイトレプリケーションサービスを更新します。
+現在のサイトマスタノードがオフラインになると、新しいノードがサイトマスタになります。Data Grid Operator は新しいサイトマスタノードを自動的に検出し、バックアップ要求を転送するようにクロスサイトサービスを更新します。
 
-これは演習であるため、2つの異なるクラスタを使用することはありませんが、この仕組みを理解するために2つの異なる Namespace を使用します。
-以下の2つの Project/Namespace を利用します。:
+これは演習であるため、2つの異なるクラスタを使用することはありませんが、この仕組みを理解するために2つの異なるプロジェクトを使用します。
+以下の2つのプロジェクトを利用します。:
 
 <1> {{ USER_ID }}-cache - Site (NYC)
 <2> {{ USER_ID }}-cache2 - Site (LON)
 
 
-リンク:{{ CONSOLE_URL }}[OpenShift web console^]で `OpenShift` コンソールを開きます。
+リンク: {{ CONSOLE_URL }}[OpenShift web console^] で `OpenShift` コンソールを開きます。
 
-Project {{ USER_ID }}-cache を選択します。
+プロジェクト {{ USER_ID }}-cache を選択します。
 
-And create a new Data Grid instance by Navigating to `Installed Operators > Data Grid > Create Infinispan ` as the following picture shows:
-次図のように「Installed Operators > Data Grid > Create Infinispan」から新しい Data Grid インスタンスを作成します。:
+次図のように「インストール済みの Operator > Data Grid > Infinispan Cluster > Infinispanの作成」から新しい Data Grid インスタンスを作成します。:
 
 image::create-infinispan.png[Cross site - Topology, 700]
 
-`Create Infinispan` ボタンを押下します。
+`Infinispanの作成` ボタンを押下します。
 
 初めに、{{ USER_ID }}-cache に NYC ロケーションの Infinispan クラスタを作成します。
 
 image::xsite-nyc-yaml.png[Cross site - Topology, 700]
 
-以下の YAML をコピーして、上図のように `Create` を押します。:
+以下の YAML をコピーして、上図のように `作成` を押します。:
 
 [source, yaml, role="copypaste"]
 ----
@@ -73,7 +72,7 @@ spec:
 
 image::xsite-lon-yaml.png[Cross site - Topology, 700]
 
-以下の YAML を読み込んで、上図のように `Create` を押します。:
+以下の YAML を読み込んで、上図のように `作成` を押します。:
 
 
 [source, yaml, role="copypaste"]
@@ -165,7 +164,9 @@ echo "$(oc get secret example-lon-generated-secret -o jsonpath="{.data.identitie
 
 image::dg8_createcache_console.png[Create cache, 700]
 
-`Create cache` を押すと、以下のようなフォームが表示されます。フィールド `Provide Cache configuration` に以下の XML を追加して create を押します。:
+`Create cache` を押すと、以下のようなフォームが表示されます。
+Name フィールドに "xsiteCache" を入力し、 `Select a way to create your cache` にて "Add cache configuration" を選択し `Next` ボタンを押します。
+フィールド `Provide your cache configuration` に以下の XML を追加して create を押します。:
 
 image::dg8_createcacheform_console.png[Create cache, 700]
 
@@ -235,14 +236,6 @@ image::dg8_createentryoutput_console.png[Create cache, 700]
 
 
 これでキャッシュが作成されたので、ウェブコンソールをブラウズすると、両方のクラスタに `xsiteCache` というキャッシュ名が表示されているはずです。
-
-いずれかのクラスタのコンソールにアクセスすれば、エントリーを見ることができるはずだ。
-
-=== まとめ
-<1> つの異なるネームスペースに2つのサイトを作成。
-<2> Data Grid Operator を使ってカスタムリソースを OpenShift にデプロイ。
-<3> サービスを外部に公開。
-<4> 2つのサイトにレプリケートされたキャッシュを作成。
-<5> キャッシュにデータをロードし、どのようにレプリケートされるかを確認。キャッシュにデータをロードし、どのようにレプリケートされるかを確認。
+いずれかのクラスタのコンソールにアクセスすれば、エントリーを見ることができるはずです。
 
 これでクロスサイトレプリケーションの演習問題は完了です。
